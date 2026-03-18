@@ -1,0 +1,397 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0f1117;
+  --bg-card: #1a1b23;
+  --bg-hover: #22232d;
+  --text: #e0e0e0;
+  --text-muted: #8b8b9a;
+  --accent: #c084fc;
+  --win: #22c55e;
+  --loss: #ef4444;
+  --nc: #6b7280;
+  --ko: #f97316;
+  --sub: #3b82f6;
+  --dec: #a855f7;
+  --border: #2a2b35;
+  --radius: 8px;
+
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* App layout */
+.app-header {
+  text-align: center;
+  padding: 40px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.tagline {
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-size: 0.95rem;
+}
+
+.app-main {
+  min-height: 60vh;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+/* Search */
+.search-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+}
+
+.search-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.search-btn:hover {
+  opacity: 0.85;
+}
+
+.search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search-results {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background: var(--bg-hover);
+}
+
+.result-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.result-nickname {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.result-record {
+  margin-left: auto;
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Profile */
+.fighter-profile {
+  margin-bottom: 32px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.profile-nickname {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.profile-record {
+  font-size: 1.5rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.career-summary {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  min-width: 80px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.physical-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.phys-stat strong {
+  color: var(--text);
+}
+
+/* Timeline */
+.timeline {
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+}
+
+.timeline-year {
+  margin-bottom: 28px;
+}
+
+.year-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 12px -28px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.year-label::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.year-fights {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Fight Card */
+.fight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 4px solid var(--nc);
+}
+
+.fight-card:hover {
+  background: var(--bg-hover);
+}
+
+.fight-card.result-win {
+  border-left-color: var(--win);
+}
+
+.fight-card.result-loss {
+  border-left-color: var(--loss);
+}
+
+.fight-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fight-result {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.fight-result.result-win {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--win);
+}
+
+.fight-result.result-loss {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--loss);
+}
+
+.fight-result.result-nc {
+  background: rgba(107, 114, 128, 0.15);
+  color: var(--nc);
+}
+
+.fight-opponent {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.fight-method {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.method-ko {
+  color: var(--ko);
+}
+
+.method-sub {
+  color: var(--sub);
+}
+
+.method-dec {
+  color: var(--dec);
+}
+
+.fight-round {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.fight-card-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.fight-card-details p {
+  margin: 4px 0;
+}
+
+/* Stats Chart */
+.stats-chart {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.stats-chart h3 {
+  color: var(--text);
+  font-size: 1.1rem;
+  margin: 0 0 12px;
+}
+
+/* Messages */
+.error-msg {
+  color: var(--loss);
+  text-align: center;
+  padding: 16px;
+}
+
+.loading-msg {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px;
+}
+
+.no-fights {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 32px;
+}
