@@ -1,0 +1,10 @@
+{
+  "name": "mma-stats",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0"
+  }
+}
