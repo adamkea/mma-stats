@@ -29,6 +29,7 @@ export function useFighterData() {
   const getFighter = useCallback(async (id) => {
     setLoading(true);
     setError(null);
+    setSearchResults([]);
 
     try {
       const res = await fetch(`${API_BASE}/fighters/${id}`);
