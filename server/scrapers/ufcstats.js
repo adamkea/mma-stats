@@ -3,6 +3,8 @@ const cache = require("../cache/store");
 
 const BASE_URL = "http://www.ufcstats.com/statistics/fighters/search";
 const FIGHTER_URL = "http://www.ufcstats.com/fighter-details";
+const EVENTS_URL = "http://www.ufcstats.com/statistics/events";
+const EVENT_URL = "http://www.ufcstats.com/event-details";
 
 async function searchFighters(name) {
   const cacheKey = `search:${name.toLowerCase()}`;
@@ -111,4 +113,93 @@ async function getFighterDetails(fighterId) {
   return fighter;
 }
 
-module.exports = { searchFighters, getFighterDetails };
+async function getEvents() {
+  const cacheKey = "events:list";
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
+  const [upcomingRes, completedRes] = await Promise.all([
+    fetch(`${EVENTS_URL}/upcoming`),
+    fetch(`${EVENTS_URL}/completed`),
+  ]);
+  const [upcomingHtml, completedHtml] = await Promise.all([
+    upcomingRes.text(),
+    completedRes.text(),
+  ]);
+
+  function parseEventRows($, limit) {
+    const events = [];
+    $("tbody tr").each((_i, row) => {
+      if (limit && events.length >= limit) return false;
+      const nameLink = $(row).find("td:first-child a");
+      const href = nameLink.attr("href");
+      const name = nameLink.text().trim();
+      const date = $(row).find("td:first-child span").text().trim() ||
+                   $(row).find("td:nth-child(2)").text().trim();
+      const location = $(row).find("td:last-child").text().trim();
+
+      if (href && name) {
+        const id = href.split("/").pop();
+        events.push({ id, name, date: date || null, location: location || null });
+      }
+    });
+    return events;
+  }
+
+  const $upcoming = cheerio.load(upcomingHtml);
+  const $completed = cheerio.load(completedHtml);
+
+  const result = {
+    upcoming: parseEventRows($upcoming, 10),
+    completed: parseEventRows($completed, 3),
+  };
+
+  cache.set(cacheKey, result, 30 * 60 * 1000); // 30 min TTL
+  return result;
+}
+
+async function getEventDetails(eventId) {
+  const cacheKey = `event:${eventId}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
+  const url = `${EVENT_URL}/${eventId}`;
+  const res = await fetch(url);
+  const html = await res.text();
+  const $ = cheerio.load(html);
+
+  const name = $("h2.b-content__title-highlight, span.b-content__title-highlight").text().trim();
+  const date = $("li.b-list__box-list-item:first-child").text().replace("Date:", "").trim();
+  const location = $("li.b-list__box-list-item:nth-child(2)").text().replace("Location:", "").trim();
+
+  const fights = [];
+  $("tbody tr.b-fight-details__table-row").each((_i, row) => {
+    const cols = $(row).find("td");
+    if (cols.length < 2) return;
+
+    const fighterLinks = $(cols[0]).find("p a");
+    if (fighterLinks.length < 2) return;
+
+    const fighter1Link = $(fighterLinks[0]);
+    const fighter2Link = $(fighterLinks[1]);
+    const weightClass = $(cols[6]).find("p").first().text().trim();
+
+    fights.push({
+      fighter1: {
+        id: (fighter1Link.attr("href") || "").split("/").pop(),
+        name: fighter1Link.text().trim(),
+      },
+      fighter2: {
+        id: (fighter2Link.attr("href") || "").split("/").pop(),
+        name: fighter2Link.text().trim(),
+      },
+      weightClass: weightClass || null,
+    });
+  });
+
+  const event = { id: eventId, name, date: date || null, location: location || null, fights };
+  cache.set(cacheKey, event);
+  return event;
+}
+
+module.exports = { searchFighters, getFighterDetails, getEvents, getEventDetails };
