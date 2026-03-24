@@ -177,12 +177,12 @@ async function getEventDetails(eventId) {
     const cols = $(row).find("td");
     if (cols.length < 2) return;
 
-    const fighterLinks = $(cols[0]).find("p a");
+    const fighterLinks = $(cols[1]).find("p a");
     if (fighterLinks.length < 2) return;
 
     const fighter1Link = $(fighterLinks[0]);
     const fighter2Link = $(fighterLinks[1]);
-    const weightClass = $(cols[6]).find("p").first().text().trim();
+    const weightClass = $(cols[7]).find("p").first().text().trim();
 
     fights.push({
       fighter1: {
